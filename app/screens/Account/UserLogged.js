@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import { StyleSheet, View, Text, ScrollView } from "react-native";
-import { Button, Divider } from "react-native-elements";
+import { Button, Divider, Header } from "react-native-elements";
 import * as firebase from "firebase";
 import InfoUser from "../../components/Account/InfoUser";
 import Toast from "react-native-easy-toast";
 import Loading from "../../components/Loading";
 import AccountOptions from "../../components/Account/AccountOption";
 import UserScores from "../../components/Account/UserScores";
+import  * as URLs from "../../../assets/constants/fetchs"
 
 export default function UserLogged() {
   const [userInfo, setUserInfo] = useState({});
@@ -15,30 +16,46 @@ export default function UserLogged() {
   const [textLoading, setTextLoading] = useState("");
   const toastRef = useRef();
 
+  const terminarRonda = () => {
+    return fetch(`${URLs.HEROKU_URL}/api/historiasPrueba`)
+      .then((response) => response.json())
+      .then((json) => {
+        console.log("TERMINAR RONDA");
+        return json;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
   useEffect(() => {
-    (async () => {
-      const user = await firebase.auth().currentUser;
-      const userComplete = user.providerData[0];
-      const x = {
-        ...userComplete,
-        score: {
-          id: 1,
-          medallaOro: 10,
-          medallaPlata: 13,
-          medallaBronce: 5,
-          puntuacion: 0,
-          rango: null,
-          medallabronce: 0,
-          rango: "Pluma plateada",
-        },
-      };
-
-      setUserInfo(x);
-    })();
+    const user = firebase.auth().currentUser;
+    const userData = user.providerData[0];
+    setUserInfo(userData);
+    function findUserLoged() {
+      return fetch(`${URLs.HEROKU_URL}/api/usuario/${user.uid}`)
+        .then((response) => response.json())
+        .then((json) => {
+          setUserInfo({ ...userData, ...json });
+          return json;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+    findUserLoged();
     setReloadData(false);
-    console.log("USER LOGUED LA CONCHA D EUTU");
-
   }, [reloadData]);
+
+  const ScoreSearch = () => {
+      return (
+        <View style={styles.viewScoreSearch}>
+          <Text>
+            Obteniendo puntuación 
+          </Text>
+        </View>
+      )
+  }
 
   return (
     <ScrollView style={styles.viewUserInfo}>
@@ -49,28 +66,29 @@ export default function UserLogged() {
         setIsLoading={setIsLoading}
         setTextLoading={setTextLoading}
       />
-      <UserScores userInfo={ {
-        score: {
-          id: 1,
-          medallaOro: 2,
-          medallaPlata: 2,
-          medallaBronce: 2,
-          puntuacion: 0,
-          rango: null,
-          medallabronce: 0,
-          rango: "Pluma plateada",
-        }}}/>
-      <AccountOptions
+      <View>
+      {userInfo.score ? <UserScores userInfo={userInfo} /> : <Text>NO</Text>}
+      </View>
+ 
+      <View style={styles.prueba}>
+      {/* <AccountOptions
         userInfo={userInfo}
         setReloadData={setReloadData}
         toastRef={toastRef}
       />
-      <Button
-        title="Cerrar sesión"
-        buttonStyle={styles.btnCloseSession}
-        titleStyle={styles.btnCloseSessionText} 
-        onPress={() => firebase.auth().signOut()}
-      />
+        <Button
+          title="Terminar ronda"
+          buttonStyle={styles.btnCloseSession}
+          titleStyle={styles.btnCloseSessionText}
+          onPress={() => terminarRonda()}
+        />
+        <Button
+          title="Cerrar sesión"
+          buttonStyle={styles.btnCloseSession}
+          titleStyle={styles.btnCloseSessionText}
+          onPress={() => firebase.auth().signOut()}
+        /> */}
+      </View>
       <Toast ref={toastRef} position="center" opacity={0.5} />
       <Loading text={textLoading} isVisible={isLoading} />
     </ScrollView>
@@ -96,4 +114,12 @@ const styles = StyleSheet.create({
   btnCloseSessionText: {
     color: "#00a680",
   },
+  prueba:{
+    marginTop:100
+  },
+  viewScoreSearch:{
+   alignSelf:"center",
+   alignItems: "center"
+  }
+
 });

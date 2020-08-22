@@ -40,6 +40,7 @@ const NavigationStacks = createBottomTabNavigator(
     Account: {
       screen: AccountScreenStacks,
       navigationOptions: () => ({
+      
         tabBarLabel: "Cuenta",
         tabBarIcon: ({ tintColor }) => (
           <Icon
@@ -52,6 +53,7 @@ const NavigationStacks = createBottomTabNavigator(
       })
     }
   },
+  
   {
     initialRouteName: "Stories",
     order: ["Stories", "Search", "Account"],

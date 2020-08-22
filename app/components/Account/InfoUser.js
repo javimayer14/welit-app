@@ -1,6 +1,6 @@
 import React from "react";
-import { StyleSheet, View, Text } from "react-native";
-import { Avatar } from "react-native-elements";
+import { StyleSheet, View } from "react-native";
+import { Avatar, Card, Text } from "react-native-elements";
 import * as firebase from "firebase";
 import * as Permissions from "expo-permissions";
 import * as ImagePicker from "expo-image-picker";
@@ -11,7 +11,7 @@ export default function InfoUser(props) {
     setReloadData,
     toastRef,
     setIsLoading,
-    setTextLoading
+    setTextLoading,
   } = props;
 
   const changeAvatar = async () => {
@@ -26,7 +26,7 @@ export default function InfoUser(props) {
     } else {
       const result = await ImagePicker.launchImageLibraryAsync({
         allowsEditing: true,
-        aspect: [4, 3]
+        aspect: [4, 3],
       });
 
       if (result.cancelled) {
@@ -44,21 +44,18 @@ export default function InfoUser(props) {
     setIsLoading(true);
     const response = await fetch(uri);
     const blob = await response.blob();
-    const ref = firebase
-      .storage()
-      .ref()
-      .child(`avatar/${nameImage}`);
+    const ref = firebase.storage().ref().child(`avatar/${nameImage}`);
     return ref.put(blob);
   };
 
-  const updatePhotoUrl = uid => {
+  const updatePhotoUrl = (uid) => {
     firebase
       .storage()
       .ref(`avatar/${uid}`)
       .getDownloadURL()
-      .then(async result => {
+      .then(async (result) => {
         const update = {
-          photoURL: result
+          photoURL: result,
         };
         await firebase.auth().currentUser.updateProfile(update);
         setReloadData(true);
@@ -70,26 +67,29 @@ export default function InfoUser(props) {
     console.log("Imagen subida correctamente");
   };
   return (
-    <View style={styles.viewUserInfo}>
-      <Avatar
-        rounded
-        size="xlarge"
-        showEditButton
-        onEditPress={changeAvatar}
-        containerStyle={styles.userInfoAvatar}
-        source={{
-          uri: photoURL
-            ? photoURL
-            : "https://api.adorable.io/avatars/285/abott@adorable.png"
-        }}
-      />
-      <View>
-        <Text style={styles.displayname}>
-          {displayName ? displayName : "Anonimo"}
-        </Text>
-        <Text style={styles.displayname}>{email}</Text>
-        <Text style={styles.displayname}>Likes totales: 5</Text>
+    <View>
+      <View style={styles.viewUserInfo}>
+        <Avatar
+          rounded
+          size="xlarge"
+          showEditButton
+          onEditPress={changeAvatar}
+          containerStyle={styles.userInfoAvatar}
+          source={{
+            uri: photoURL
+              ? photoURL
+              : "https://api.adorable.io/avatars/285/abott@adorable.png",
+          }}
+        />
+
+        <View>
+          <Text style={styles.displayname}>
+            {displayName ? displayName : "Anonimo"}
+          </Text>
+          <Text style={styles.displayname}>{email}</Text>
+        </View>
       </View>
+      
     </View>
   );
 }
@@ -97,15 +97,23 @@ const styles = StyleSheet.create({
   viewUserInfo: {
     alignItems: "center",
     justifyContent: "center",
-    flexDirection: "row",
-    backgroundColor: "#f2f2f2",
+    backgroundColor: "#00a680",
     paddingTop: 30,
-    paddingBottom: 10
+    paddingBottom: 100,
   },
   userInfoAvatar: {
-    marginRight: 20
+    marginBottom: 20,
   },
   displayname: {
-    fontSize:16
-  }
+    fontSize: 18,
+    alignSelf: "center",
+    color: "#EEE",
+  },
+  cardStyle: {
+    marginTop:300,
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "center",
+    position: "absolute",
+  },
 });

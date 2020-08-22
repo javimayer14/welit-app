@@ -3,6 +3,7 @@ import { View, StyleSheet } from "react-native";
 import { Input, Button } from "react-native-elements";
 import * as firebase from "firebase";
 import { reauthenticate } from "../../utils/Api";
+import  * as URLs from "../../../assets/constants/fetchs"
 
 export default function ChageEmailForm(props) {
   const { email, setIsVisibleModal, setReloadData, toastRef } = props;
@@ -12,6 +13,22 @@ export default function ChageEmailForm(props) {
   const [hidePassword, setHidePassword] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
+
+  const updateEmailApi = (idUser) => {
+    fetch(`${URLs.HEROKU_URL}/api/usuario/${idUser}`, {
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: idUser,
+        email: newEmail,
+        createAt: Date.now(),
+      
+      }),
+    });
+  }
   const updateEmail = () => {
     setError({});
     if (!newEmail || email === newEmail) {
@@ -25,6 +42,9 @@ export default function ChageEmailForm(props) {
             .currentUser.updateEmail(newEmail)
             .then(() => {
               setIsLoading(false);
+              updateEmailApi(firebase
+                .auth()
+                .currentUser.uid);
               setReloadData(true);
               setIsVisibleModal(false);
             })

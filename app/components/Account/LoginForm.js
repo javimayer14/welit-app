@@ -27,7 +27,9 @@ function LoginForm(props) {
           .then(() => {
             navigation.navigate("Account");
           })
-          .catch(() => {
+          .catch((e) => {
+            console.log(e)
+            console.log("no anda")
             toastRef.current.show("Email o contraseña incorrecta");
           });
       }

@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, FlatList, Image } from "react-native";
 import { SearchBar, ListItem, Icon } from "react-native-elements";
 import { useDebouncedCallback } from "use-debounce";
+import  * as URLs from "../../assets/constants/fetchs"
 
-export default function(props) {
+export default function (props) {
   const { navigation } = props;
-  const [stories, setHistories] = useState([]);
+  const [stories, setStories] = useState([]);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
@@ -14,81 +15,31 @@ export default function(props) {
 
   const [onSearch] = useDebouncedCallback(() => {
     if (search) {
-      setHistories([
-        
-        {
-          id: 2,
-          usuario: null,
-          comentarios: [],
-          imagen:
-            "https://firebasestorage.googleapis.com/v0/b/welit-3d309.appspot.com/o/storyImages%2Fasd?alt=media&token=c99ff75e-4ab7-4eff-9ec7-a5a1f63cd7e4",
-          genero: "fantasia",
-          titulo: "la naranja mecanica",
-          relato: "Habia una vez un...",
-          mg: "14",
-          createAt: null,
-          activo: 0
-        }
-      ]);
-    }else{
-      setHistories([
-        {
-          id: 1,
-          usuario: null,
-          comentarios: [
-            {
-              id: 1,
-              mg: 2,
-              comentario:
-                "Entonces aparecio un bicmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmhoEntonces aparecio un bicho Entonces aparecio un bicho Entonces aparecio un bicho Entonces aparecio un bicho",
-              createAt: "2000-01-01T00:00:00.000+0000",
-              usuario: {
-                usuario: "Jorgelina rivaldi"
-              }
-            },
-            {
-              id: 2,
-              mg: 2,
-              comentario: "un circo que alegraba siempre el cprazon",
-              createAt: "2000-01-01T00:00:00.000+0000",
-              usuario: {
-                usuario: "Jorgelina rivaldi"
-              }
-            },
-            {
-              id: 2,
-              mg: 5,
-              comentario: "una cancha de futbol en el medio ",
-              createAt: "2000-01-01T00:00:00.000+0000",
-              usuario: {
-                usuario: "Jorgelina rivaldi"
-              }
-            }
-          ],
-          imagen:
-            "https://firebasestorage.googleapis.com/v0/b/welit-3d309.appspot.com/o/storyImages%2Fpiramides.jpg?alt=media&token=a34ef33f-203f-40ae-a039-55d342bcd31c",
-          genero: "fantasia",
-          titulo: "el loco flechazo",
-          relato:
-            "Habia una vez un.... Entonce   s aparecio un bicho. Entonces aparecio un bicho. Entonces aparecio un bicho. Entonces aparecio un bicho",
-          mg: "38",
-          createAt: null,
-          activo: 0
-        },
-        {
-          id: 2,
-          usuario: null,
-          comentarios: [],
-          imagen:
-            "https://firebasestorage.googleapis.com/v0/b/welit-3d309.appspot.com/o/storyImages%2Fasd?alt=media&token=c99ff75e-4ab7-4eff-9ec7-a5a1f63cd7e4",
-          genero: "fantasia",
-          titulo: "la naranja mecanica",
-          relato: "Habia una vez un...",
-          mg: "14",
-          createAt: null,
-          activo: 0
-        }
-      ]);
+      function findStory() {
+        return fetch(`${URLs.HEROKU_URL}/api/historia/${search}`)
+          .then((response) => response.json())
+          .then((json) => {
+            setStories(json);
+            return json;
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+      findStory();
+    } else {
+      async function findHistoriasInactivas() {
+        return await fetch(`${URLs.HEROKU_URL}/api/historiasInactivas`)
+          .then((response) => response.json())
+          .then((json) => {
+            setStories(json);
+            return json;
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
+      let w = findHistoriasInactivas();
     }
   }, 300);
 
@@ -96,7 +47,7 @@ export default function(props) {
     <View>
       <SearchBar
         placeholder="Busca una historia"
-        onChangeText={e => setSearch(e)}
+        onChangeText={(e) => setSearch(e)}
         value={search}
         containerStyle={styles.seachBar}
       />
@@ -107,7 +58,9 @@ export default function(props) {
       ) : (
         <FlatList
           data={stories}
-          renderItem={story => <Story story={story} navigation={navigation} />}
+          renderItem={(story) => (
+            <Story story={story} navigation={navigation} />
+          )}
           keyExtractor={(item, index) => index.toString()}
         />
       )}
@@ -116,7 +69,7 @@ export default function(props) {
 }
 function Story(props) {
   const { story, navigation } = props;
-  console.log("esto es sstory" + story);
+  console.log("esto es sstory" + story.item.imagen);
   return (
     <View>
       <ListItem
@@ -142,9 +95,9 @@ function NotFoundStory() {
   return (
     <View style={styles.notFound}>
       <Image
-        source={require("../../assets/img/no-result-found.png")}
+        source={require("../../assets/img/search.png")}
         resizeMode="cover"
-        style={{ width: 200, height: 200 }}
+        style={{ width: 250, height: 300 }}
       ></Image>
     </View>
   );
@@ -152,22 +105,22 @@ function NotFoundStory() {
 
 const styles = StyleSheet.create({
   seachBar: {
-    marginBottom: 20
+    marginBottom: 20,
   },
   notFound: {
     flex: 1,
-    alignItems: "center"
+    alignItems: "center",
   },
   subtitleView: {
-    flexDirection: "row"
+    flexDirection: "row",
   },
   ratingText: {
     color: "#000000",
     fontSize: 18,
-    marginRight: 15
+    marginRight: 15,
   },
   title: {
     fontSize: 20,
-    fontWeight: "bold"
-  }
+    fontWeight: "bold",
+  },
 });

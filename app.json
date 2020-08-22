@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "5 tenedores",
-    "slug": "5-tenedores",
+    "name": "WeLit",
+    "slug": "WeLit",
     "privacy": "public",
     "sdkVersion": "36.0.0",
     "platforms": ["ios", "android", "web"],
@@ -21,7 +21,11 @@
       "supportsTablet": true
     },
     "android": {
-      "permissions": ["CAMERA_ROLL"]
+      "permissions": ["CAMERA_ROLL"],
+      "googleServicesFile": "./google-services.json",
+      "package": "com.freelance.welit",
+      "versionCode": 1
+
     }
   }
 }

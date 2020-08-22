@@ -1,6 +1,5 @@
 import React from "react";
 import { View, StyleSheet, Text } from "react-native";
-import { InfoUserVisited } from "../components/InfoUserVisited";
 import UserScores from "../components/Account/UserScores";
 import { Avatar } from "react-native-elements";
 
@@ -23,7 +22,7 @@ export default function UserVisited(props) {
         <View>
           <Text style={styles.displayname}>{nombre ? nombre : "Anonimo"}</Text>
           <Text style={styles.displayname}>{email}</Text>
-          <Text style={styles.displayname}>Likes totales: 5</Text>
+         
         </View>
       </View>
       <UserScores userInfo = {navigation.state.params}/>
@@ -32,10 +31,7 @@ export default function UserVisited(props) {
 }
 
 const styles = StyleSheet.create({
-  viewUserInfo: {
-    minHeight: "100%",
-    backgroundColor: "#f2f2f2",
-  },
+
   btnCloseSession: {
     marginTop: 30,
     borderRadius: 10,
@@ -51,18 +47,21 @@ const styles = StyleSheet.create({
     color: "#00a680",
   },
   viewUserInfo: {
+    backgroundColor: "#f2f2f2",
+
     alignItems: "center",
     justifyContent: "center",
-    flexDirection: "row",
-    backgroundColor: "#f2f2f2",
+    backgroundColor: "#00a680",
     paddingTop: 30,
-    paddingBottom: 10,
+    paddingBottom: 100,
+  },
+
+  displayname: {
+    fontSize: 18,
+    alignSelf: "center",
+    color: "#EEE",
   },
   userInfoAvatar: {
-    marginRight: 20,
-  },
-  displayName: {
-    fontWeight: "bold",
-    fontSize: 200,
+    marginBottom: 20,
   },
 });

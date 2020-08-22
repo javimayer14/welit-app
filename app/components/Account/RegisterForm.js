@@ -5,6 +5,7 @@ import { validateEmail } from "../../utils/Validations";
 import * as firebase from "firebase";
 import { withNavigation } from "react-navigation";
 import Loading from "../Loading";
+import  * as URLs from "../../../assets/constants/fetchs"
 
 function RegisterForm(props) {
   const { toastRef, navigation } = props;
@@ -14,6 +15,8 @@ function RegisterForm(props) {
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
   const [isVisibleLoading, setIsVisibleLoading] = useState(false);
+  const [user, setUser] = useState(null);
+
   const register = async () => {
     setIsVisibleLoading(true);
     if (!email || !password || !repeatPassword) {
@@ -31,7 +34,9 @@ function RegisterForm(props) {
           await firebase
             .auth()
             .createUserWithEmailAndPassword(email, password)
-            .then(() => {
+            .then((response) => {
+              RegisterInApi(email, password);
+              console.log("RESPONSE",response);
               navigation.navigate("Account");
             })
             .catch(() => {
@@ -43,6 +48,35 @@ function RegisterForm(props) {
     }
     setIsVisibleLoading(false);
   };
+  const RegisterInApi = async (email, password) =>{
+    const user = await firebase.auth().currentUser;
+    console.log(user);
+    await fetch(`${URLs.HEROKU_URL}/api/usuarios`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: user.uid,
+        nombre: null,
+        apellido: null,
+        email: email,
+        createAt: Date.now(),
+        score:{
+        	medallaOro:0,
+        	medallaPlata:0,
+        	medallaBronce:0,
+        	puntuacion:0
+        },
+        rango: {
+        	id:1
+        }
+      
+      }),
+    });
+  }
+ 
   return (
     <View style={styles.formContainer} behavior="padding" enabled>
       <Input

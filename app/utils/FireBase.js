@@ -1,13 +1,17 @@
 import firebase from "firebase/app";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDtkVn8tdGkq9nrPVcFh9oJuFUIAlKON4c",
-  authDomain: "welit-3d309.firebaseapp.com",
-  databaseURL: "https://welit-3d309.firebaseio.com",
-  projectId: "welit-3d309",
-  storageBucket: "welit-3d309.appspot.com",
-  messagingSenderId: "78012021760",
-  appId: "1:78012021760:web:ede0b65e21f10c0541ece5"
+  apiKey: "AIzaSyCvbS8It3sajMi20_en0iPjL4qJhDBq1FA",
+  authDomain: "welit-adfb8.firebaseapp.com",
+  databaseURL: "https://welit-adfb8.firebaseio.com",
+  projectId: "welit-adfb8",
+  storageBucket: "welit-adfb8.appspot.com",
+  messagingSenderId: "738469842957",
+  appId: "1:738469842957:web:1906aa51e035c614900544",
+  measurementId: "G-8490RD3Q6X"
 };
 
 export const firebaseApp = firebase.initializeApp(firebaseConfig);
+
+  
+  

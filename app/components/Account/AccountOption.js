@@ -61,7 +61,7 @@ export default function AccountOptions(props) {
             email={userInfo.email}
             setIsVisibleModal={setIsVisibleModal}
             setReloadData={setReloadData}
-            toastRef={toastRef}
+            toastRef={toastRef} 
           />
         );
         setIsVisibleModal(true);

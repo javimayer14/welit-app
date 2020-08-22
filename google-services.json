@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "78012021760",
+    "firebase_url": "https://welit-3d309.firebaseio.com",
+    "project_id": "welit-3d309",
+    "storage_bucket": "welit-3d309.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:78012021760:android:7ffc979cbfb99eda41ece5",
+        "android_client_info": {
+          "package_name": "com.freelance.welit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "78012021760-qtqcf5kk9qelrr5eo28o8esjo4osl9sp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDlZATGPX9_SIFKZPiljSnC4shjBCrcXkU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "78012021760-qtqcf5kk9qelrr5eo28o8esjo4osl9sp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

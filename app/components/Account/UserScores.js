@@ -1,77 +1,56 @@
 import React, { useState, useEffect, useReducer } from "react";
 import { StyleSheet, View, Text, Image } from "react-native";
-import { Icon, Avatar, Divider } from "react-native-elements";
+import { Icon, Avatar, Divider, Card } from "react-native-elements";
 import Modal from "../../components/Modal";
 import { ListItem } from "react-native-elements";
 import { ScrollView } from "react-native-gesture-handler";
+import  * as URLs from "../../../assets/constants/fetchs"
 
 export default function UserScores(props) {
   const [isVisibleModal, setIsVisibleModal] = useState(false);
 
-  let { userInfo  } = props;
+  const { userInfo } = props;
   const [userLoged, setUSerLoged] = useState({});
+
+  useEffect(() => {
+    function FindUserLoged() {
+      const uid = userInfo.uid;
+      return fetch(`${URLs.HEROKU_URL}/api/usuario/${uid}`)
+        .then((response) => response.json())
+        .then((json) => {
+          setUSerLoged(json);
+          console.log("asdads" + uid);
+          return json;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+    FindUserLoged();
+  }, []);
 
   return (
     <View>
-      <Divider />
-      <Categoria rango={userInfo.rango} />
-      <Divider />
-      <View style={styles.view}>
-        <View style={styles.viewCountMedal}>
-          {userInfo.score.medallaOro ? (
-            <Icon
-              type="material-community"
-              name="medal"
-              color="#FFD700"
-              size={70}
-            />
-          ) : (
-            <Image
-              source={require("../../../assets/img/empty-medal.png")}
-              style={styles.image}
-              resizeMode="contain"
-            />
-          )}
-          <Text style={styles.textBronze}>{userInfo.score.medallaOro}</Text>
-        </View>
-        <View style={styles.viewCountMedal}>
-          {userInfo.score.medallaPlata ? (
-            <Icon
-              type="material-community"
-              name="medal"
-              color="#B9B9B9"
-              size={70}
-            />
-          ) : (
-            <Image
-              source={require("../../../assets/img/empty-medal.png")}
-              style={styles.image}
-              resizeMode="contain"
-            />
-          )}
-          <Text style={styles.textSilver}>{userInfo.score.medallaPlata}</Text>
-        </View>
-        <View style={styles.viewCountMedal}>
-          {userInfo.score.medallaBronce ? (
-            <Icon
-              type="material-community"
-              name="medal"
-              style={styles.medal}
-              color="#8C7853"
-              size={70}
-            />
-          ) : (
-            <Image
-              source={require("../../../assets/img/empty-medal.png")}
-              style={styles.image}
-              resizeMode="contain"
-            />
-          )}
-          <Text style={styles.textGold}>{userInfo.score.medallaBronce}</Text>
-        </View>
+      <View style={styles.viewCard}>
+        <Card containerStyle={styles.cardStyle}>
+
+
+          <View>
+          <Text style={styles.txtRango} onPress={()=> setIsVisibleModal(true)}>{userInfo.rango.descripcion}</Text>
+          <Divider />
+          <Medallas userInfo={userInfo}/>
+          <Divider />
+            <Text style={styles.txtPuntos} >Experiencia: {userInfo.score.puntuacion} Pts</Text>
+          </View>
+        </Card>
       </View>
+      <Divider />
+      <Categoria rango={userInfo.rango.descripcion} />
+      <Divider />
+
       <Modal isVisible={isVisibleModal} setIsVisible={setIsVisibleModal}>
         <ViewRangos />
+     
       </Modal>
     </View>
   );
@@ -93,6 +72,70 @@ export default function UserScores(props) {
       </View>
     );
   }
+}
+
+const Medallas = (props) =>{
+  const { userInfo } = props;
+
+return (
+  <View style={styles.view}>
+  <View style={styles.viewCountMedal}>
+    {userInfo.score.medallaOro ? (
+      <Icon
+        type="material-community"
+        name="medal"
+        color="#FFD700"
+        size={70}
+      />
+    ) : (
+      <Icon
+      type="material-community"
+      name="medal"
+      color="#EEE"
+      size={70}
+    />
+    )}
+    <Text style={styles.textBronze}>{userInfo.score.medallaOro}</Text>
+  </View>
+  <View style={styles.viewCountMedal}>
+    {userInfo.score.medallaPlata ? (
+      <Icon
+        type="material-community"
+        name="medal"
+        color="#B9B9B9"
+        size={70}
+      />
+    ) : (
+      <Icon
+      type="material-community"
+      name="medal"
+      color="#EEE"
+      size={70}
+    />
+    )}
+    <Text style={styles.textSilver}>{userInfo.score.medallaPlata}</Text>
+  </View>
+  <View style={styles.viewCountMedal}>
+    {userInfo.score.medallaBronce ? (
+      <Icon
+        type="material-community"
+        name="medal"
+        style={styles.medal}
+        color="#8C7853"
+        size={70}
+      />
+    ) : (
+      <Icon
+      type="material-community"
+      name="medal"
+      color="#EEE"
+      size={70}
+    />
+    )}
+    <Text style={styles.textGold}>{userInfo.score.medallaBronce}</Text>
+  </View>
+</View>
+)
 }
 
 function ViewRangos() {
@@ -251,4 +294,25 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#FFFFFF",
   },
+  viewCard: {
+    alignItems: "center",
+    alignSelf: "center",
+    position: "absolute",
+    top: '-150%',
+    width:"100%"
+
+  },
+  cardStyle:{
+    width:"80%"
+  },
+  txtPuntos:{
+    alignSelf:"center",
+    fontSize:15,
+    marginTop:10
+    },
+    txtRango:{
+      alignSelf:"center",
+      fontSize:20,
+      marginBottom:10
+    }
 });
